@@ -5,7 +5,7 @@ from typing import Optional
 from typing import List
 
 import psycopg2
-from psycopg2 import sql
+from psycopg2 import sql, IntegrityError, OperationalError
 from connection import conn_params
 
 import os
@@ -373,6 +373,6 @@ def explain(medicine_name: str):
     return explanation
 
 
-# if __name__ == '__main__':
-#     uvicorn.run('api:app', host='0.0.0.0', port=80, reload=True)
+if __name__ == '__main__':
+    uvicorn.run('api:app', host='0.0.0.0', port=80, reload=True)
 
