@@ -140,7 +140,7 @@ def get_users_prescriptions(user_id: int):
         with psycopg2.connect(**conn_params) as conn:
             with conn.cursor() as cur:
                 db_query = sql.SQL("""
-                    SELECT * FROM prescriptions
+                    SELECT * FROM users
                     WHERE id = %s;
                 """)
                 cur.execute(db_query, (user_id,))
