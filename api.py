@@ -141,7 +141,7 @@ def get_users_prescriptions(user_id: int):
             with conn.cursor() as cur:
                 db_query = sql.SQL("""
                     SELECT * FROM users
-                    WHERE id = %s;
+                    WHERE id=%s;
                 """)
                 cur.execute(db_query, (user_id,))
                 rows = cur.fetchone()
