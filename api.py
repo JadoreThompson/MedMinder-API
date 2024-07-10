@@ -143,7 +143,7 @@ def get_users_prescriptions(user_id: int):
         with psycopg2.connect(**conn_params) as conn:
             with conn.cursor() as cur:
                 db_query = sql.SQL("""
-                    SELECT * FROM users
+                    SELECT  id FROM users
                     WHERE id=%s;
                 """)
                 cur.execute(db_query, (user_id,))
@@ -224,7 +224,7 @@ def login(user: LoginUser):
     with psycopg2.connect(**conn_params) as conn:
         with conn.cursor() as cur:
             db_query = sql.SQL("""
-                SELECT * FROM users
+                SELECT id, password FROM users
                 WHERE email=%s;
             """)
             cur.execute(db_query, (user.email,))
@@ -233,19 +233,18 @@ def login(user: LoginUser):
             if rows is None:
                 raise HTTPException(status_code=404, detail='User not found')
 
-            if compare_password(user.password, rows[5]):
+            if compare_password(user.password, rows[1]):
                 return Patient(id=rows[0])
             else:
                 raise HTTPException(status_code=401, detail='incorrect')
 
 
-@cached(cache={})
 @app.post('/account/register', response_model=Patient)
 def register_user(user: RegisterUser):
     with psycopg2.connect(**conn_params) as conn:
         with conn.cursor() as cur:
             db_query = sql.SQL("""
-                SELECT * FROM users
+                SELECT id FROM users
                 WHERE email=%s;
             """)
             cur.execute(db_query, (user.email, ))
@@ -271,7 +270,7 @@ def update_user(user_id: int, update_data: UpdateUser):
     with psycopg2.connect(**conn_params) as conn:
         with conn.cursor() as cur:
             db_query = sql.SQL("""
-                SELECT * FROM users
+                SELECT id FROM users
                 WHERE id=%s;
             """)
             cur.execute(db_query, (user_id, ))
@@ -336,7 +335,7 @@ def delete_user(user_id: int):
     with psycopg2.connect(**conn_params) as conn:
         with conn.cursor() as cur:
             db_query = sql.SQL("""
-                SELECT * FROM users
+                SELECT id FROM users
                 WHERE id=%s;
             """)
             cur.execute(db_query, (user_id, ))
