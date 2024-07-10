@@ -240,7 +240,7 @@ def login(user: LoginUser):
 
 
 @cached(cache={})
-@app.post('/accounts/register', response_model=Patient)
+@app.post('/account/register', response_model=Patient)
 def register_user(user: RegisterUser):
     with psycopg2.connect(**conn_params) as conn:
         with conn.cursor() as cur:
