@@ -7,6 +7,7 @@ from typing import List
 import psycopg2
 from psycopg2 import sql, IntegrityError, OperationalError
 from connection import conn_params
+from cachetools import cached
 
 import os
 from dotenv import load_dotenv
@@ -110,6 +111,7 @@ def read_root():
     return {'status': 200, 'message': ''}
 
 
+@cached(cache={})
 @app.get('/prescription/{prescription_id}', response_model=PrescriptionDetails)
 def get_prescription(prescription_id: int):
     if not prescription_id:
@@ -132,6 +134,7 @@ def get_prescription(prescription_id: int):
                 return prescription
 
 
+@cached(cache={})
 @app.get('/prescriptions', response_model=List[PrescriptionDetails])
 def get_users_prescriptions(user_id: int):
     if user_id is None:
@@ -168,6 +171,7 @@ def get_users_prescriptions(user_id: int):
                         return users_prescriptions
 
 
+@cached(cache={})
 @app.get('/find-user', response_model=List[PatientDetails])
 def get_user(user_id: Optional[int] = None, email: Optional[str] = None, fname: Optional[str] = None, sname: Optional[str] = None):
     if user_id is None and email is None and fname is None and sname is None:
@@ -214,6 +218,7 @@ def get_user(user_id: Optional[int] = None, email: Optional[str] = None, fname: 
                     return list_of_patients
 
 
+@cached(cache={})
 @app.post('/account/login', response_model=Patient)
 def login(user: LoginUser):
     with psycopg2.connect(**conn_params) as conn:
@@ -234,6 +239,7 @@ def login(user: LoginUser):
                 raise HTTPException(status_code=401, detail='incorrect')
 
 
+@cached(cache={})
 @app.post('/accounts/register', response_model=Patient)
 def register_user(user: RegisterUser):
     with psycopg2.connect(**conn_params) as conn:
@@ -259,6 +265,7 @@ def register_user(user: RegisterUser):
                 return Patient(id=user_id)
 
 
+@cached(cache={})
 @app.put('/accounts/update/{user_id}', response_model=PatientDetails)
 def update_user(user_id: int, update_data: UpdateUser):
     with psycopg2.connect(**conn_params) as conn:
@@ -323,6 +330,7 @@ def update_user(user_id: int, update_data: UpdateUser):
             )
 
 
+@cached(cache={})
 @app.delete('/accounts/delete/{user_id}')
 def delete_user(user_id: int):
     with psycopg2.connect(**conn_params) as conn:
@@ -347,6 +355,7 @@ def delete_user(user_id: int):
                 return "Successfully Deleted"
 
 
+@cached(cache={})
 @app.post('/create-medicine')
 def create_medicine(prescription: PrescriptionDetails, user_id: int):
     with psycopg2.connect(**conn_params) as conn:
@@ -362,6 +371,7 @@ def create_medicine(prescription: PrescriptionDetails, user_id: int):
             return Prescription(id=prescription_id)
 
 
+@cached(cache={})
 @app.post('/get-explanation')
 def explain(medicine_name: str):
     print("Medicine Name: ", medicine_name)
@@ -374,5 +384,5 @@ def explain(medicine_name: str):
 
 
 if __name__ == '__main__':
-    uvicorn.run('api:app', host='0.0.0.0', port=80, reload=True)
+    uvicorn.run('api:app', port=80, reload=True)
 
