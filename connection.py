@@ -13,6 +13,6 @@ conn_params = {
     'port': os.getenv('DB_PORT')
 }
 
-with psycopg2.connect(**conn_params) as conn:
-    with conn.cursor() as cur:
-        print("Conn:", conn)
+# with psycopg2.connect(**conn_params) as conn:
+#     with conn.cursor() as cur:
+#         print("Conn:", conn)
