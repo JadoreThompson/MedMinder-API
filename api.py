@@ -114,272 +114,281 @@ def read_root():
 @cached(cache={})
 @app.get('/prescription/{prescription_id}', response_model=PrescriptionDetails)
 def get_prescription(prescription_id: int):
-    if not prescription_id:
-        raise HTTPException(status_code=404, detail='No ID was passed"!')
-
-    with psycopg2.connect(**conn_params) as conn:
-        with conn.cursor() as cur:
-            db_query = sql.SQL("""
-                SELECT * FROM prescriptions
-                WHERE id = %s;
-            """)
-            cur.execute(db_query, (prescription_id,))
-            rows = cur.fetchone()
-
-            if rows is None:
-                raise HTTPException(status_code=401, detail='No Such Prescription')
-
-            else:
-                prescription = PrescriptionDetails(quantity=rows[3], mgs=rows[5], dosage=rows[4], name=rows[2])
-                return prescription
+    return
+    # if not prescription_id:
+    #     raise HTTPException(status_code=404, detail='No ID was passed"!')
+    #
+    # with psycopg2.connect(**conn_params) as conn:
+    #     with conn.cursor() as cur:
+    #         db_query = sql.SQL("""
+    #             SELECT * FROM prescriptions
+    #             WHERE id = %s;
+    #         """)
+    #         cur.execute(db_query, (prescription_id,))
+    #         rows = cur.fetchone()
+    #
+    #         if rows is None:
+    #             raise HTTPException(status_code=401, detail='No Such Prescription')
+    #
+    #         else:
+    #             prescription = PrescriptionDetails(quantity=rows[3], mgs=rows[5], dosage=rows[4], name=rows[2])
+    #             return prescription
 
 
 @cached(cache={})
 @app.get('/prescriptions', response_model=List[PrescriptionDetails])
 def get_users_prescriptions(user_id: int):
-    if user_id is None:
-        raise HTTPException(status_code=420, detail="Missing user id")
-    else:
-        with psycopg2.connect(**conn_params) as conn:
-            with conn.cursor() as cur:
-                db_query = sql.SQL("""
-                    SELECT  id FROM users
-                    WHERE id=%s;
-                """)
-                cur.execute(db_query, (user_id,))
-                rows = cur.fetchone()
-
-                if rows is None:
-                    raise HTTPException(status_code=401, detail='No such user')
-                else:
-                    db_query = sql.SQL("""
-                        SELECT * FROM prescriptions
-                        WHERE user_id=%s;
-                    """)
-                    cur.execute(db_query, (user_id, ))
-                    rows = cur.fetchall()
-
-                    if rows is None:
-                        raise HTTPException(status_code=404, detail="No prescriptions")
-                    else:
-                        users_prescriptions =[
-                            PrescriptionDetails(
-                                name=row[2], quantity=row[3], dosage=row[4], mgs=row[5]
-                            ) for row in rows
-                        ]
-
-                        return users_prescriptions
+    return
+    # if user_id is None:
+    #     raise HTTPException(status_code=420, detail="Missing user id")
+    # else:
+    #     with psycopg2.connect(**conn_params) as conn:
+    #         with conn.cursor() as cur:
+    #             db_query = sql.SQL("""
+    #                 SELECT  id FROM users
+    #                 WHERE id=%s;
+    #             """)
+    #             cur.execute(db_query, (user_id,))
+    #             rows = cur.fetchone()
+    #
+    #             if rows is None:
+    #                 raise HTTPException(status_code=401, detail='No such user')
+    #             else:
+    #                 db_query = sql.SQL("""
+    #                     SELECT * FROM prescriptions
+    #                     WHERE user_id=%s;
+    #                 """)
+    #                 cur.execute(db_query, (user_id, ))
+    #                 rows = cur.fetchall()
+    #
+    #                 if rows is None:
+    #                     raise HTTPException(status_code=404, detail="No prescriptions")
+    #                 else:
+    #                     users_prescriptions =[
+    #                         PrescriptionDetails(
+    #                             name=row[2], quantity=row[3], dosage=row[4], mgs=row[5]
+    #                         ) for row in rows
+    #                     ]
+    #
+    #                     return users_prescriptions
 
 
 @cached(cache={})
 @app.get('/find-user', response_model=List[PatientDetails])
 def get_user(user_id: Optional[int] = None, email: Optional[str] = None, fname: Optional[str] = None, sname: Optional[str] = None):
-    if user_id is None and email is None and fname is None and sname is None:
-        raise HTTPException(status_code=404, detail="No parameters entered")
-    else:
-        with psycopg2.connect(**conn_params) as conn:
-            with conn.cursor() as cur:
-                query_conditions = []
-                query_values = []
-
-                if user_id is not None:
-                    query_conditions.append("id=%s")
-                    query_values.append(user_id)
-                if email is not None:
-                    query_conditions.append("email=%s")
-                    query_values.append(email)
-                if fname is not None:
-                    query_conditions.append("fname=%s")
-                    query_values.append(fname)
-                if sname is not None:
-                    query_conditions.append("sname=%s")
-                    query_values.append(sname)
-
-                query_conditions_str = " AND ".join(query_conditions)
-                db_query = sql.SQL(f"SELECT * FROM users WHERE {query_conditions_str};")
-                cur.execute(db_query, query_values)
-                rows = cur.fetchall()
-
-                if rows is None:
-                    raise HTTPException(status_code=404, detail="User not found")
-                else:
-                    list_of_patients = [
-                        PatientDetails(
-                            id=row[0],
-                            fname=row[2],
-                            sname=row[3],
-                            email=row[3],
-                            phone=row[4],
-                            password=row[5]
-                        )
-                        for row in rows
-                    ]
-
-                    return list_of_patients
+    return
+    # if user_id is None and email is None and fname is None and sname is None:
+    #     raise HTTPException(status_code=404, detail="No parameters entered")
+    # else:
+    #     with psycopg2.connect(**conn_params) as conn:
+    #         with conn.cursor() as cur:
+    #             query_conditions = []
+    #             query_values = []
+    #
+    #             if user_id is not None:
+    #                 query_conditions.append("id=%s")
+    #                 query_values.append(user_id)
+    #             if email is not None:
+    #                 query_conditions.append("email=%s")
+    #                 query_values.append(email)
+    #             if fname is not None:
+    #                 query_conditions.append("fname=%s")
+    #                 query_values.append(fname)
+    #             if sname is not None:
+    #                 query_conditions.append("sname=%s")
+    #                 query_values.append(sname)
+    #
+    #             query_conditions_str = " AND ".join(query_conditions)
+    #             db_query = sql.SQL(f"SELECT * FROM users WHERE {query_conditions_str};")
+    #             cur.execute(db_query, query_values)
+    #             rows = cur.fetchall()
+    #
+    #             if rows is None:
+    #                 raise HTTPException(status_code=404, detail="User not found")
+    #             else:
+    #                 list_of_patients = [
+    #                     PatientDetails(
+    #                         id=row[0],
+    #                         fname=row[2],
+    #                         sname=row[3],
+    #                         email=row[3],
+    #                         phone=row[4],
+    #                         password=row[5]
+    #                     )
+    #                     for row in rows
+    #                 ]
+    #
+    #                 return list_of_patients
 
 
 @cached(cache={})
 @app.post('/account/login', response_model=Patient)
 def login(user: LoginUser):
-    with psycopg2.connect(**conn_params) as conn:
-        with conn.cursor() as cur:
-            db_query = sql.SQL("""
-                SELECT id, password FROM users
-                WHERE email=%s;
-            """)
-            cur.execute(db_query, (user.email,))
-            rows = cur.fetchone()
-
-            if rows is None:
-                raise HTTPException(status_code=404, detail='User not found')
-
-            if compare_password(user.password, rows[1]):
-                return Patient(id=rows[0])
-            else:
-                raise HTTPException(status_code=401, detail='incorrect')
+    return
+    # with psycopg2.connect(**conn_params) as conn:
+    #     with conn.cursor() as cur:
+    #         db_query = sql.SQL("""
+    #             SELECT id, password FROM users
+    #             WHERE email=%s;
+    #         """)
+    #         cur.execute(db_query, (user.email,))
+    #         rows = cur.fetchone()
+    #
+    #         if rows is None:
+    #             raise HTTPException(status_code=404, detail='User not found')
+    #
+    #         if compare_password(user.password, rows[1]):
+    #             return Patient(id=rows[0])
+    #         else:
+    #             raise HTTPException(status_code=401, detail='incorrect')
 
 
 @app.post('/account/register', response_model=Patient)
 def register_user(user: RegisterUser):
-    with psycopg2.connect(**conn_params) as conn:
-        with conn.cursor() as cur:
-            db_query = sql.SQL("""
-                SELECT id FROM users
-                WHERE email=%s;
-            """)
-            cur.execute(db_query, (user.email, ))
-            rows = cur.fetchone()
-            if rows:
-                raise HTTPException(status_code=401, detail='User already exists')
-            else:
-                insert_script = sql.SQL("""
-                    INSERT INTO users(fname,sname,email,phone,password)
-                    VALUES (%s,%s,%s,%s,%s)
-                    RETURNING id;
-                """)
-                hashed_password = encrypt_password(user.password)
-                cur.execute(insert_script, (user.fname, user.sname, user.email, user.phone, hashed_password, ))
-                user_id = cur.fetchone()[0]
-
-                return Patient(id=user_id)
+    return
+    # with psycopg2.connect(**conn_params) as conn:
+    #     with conn.cursor() as cur:
+    #         db_query = sql.SQL("""
+    #             SELECT id FROM users
+    #             WHERE email=%s;
+    #         """)
+    #         cur.execute(db_query, (user.email, ))
+    #         rows = cur.fetchone()
+    #         if rows:
+    #             raise HTTPException(status_code=401, detail='User already exists')
+    #         else:
+    #             insert_script = sql.SQL("""
+    #                 INSERT INTO users(fname,sname,email,phone,password)
+    #                 VALUES (%s,%s,%s,%s,%s)
+    #                 RETURNING id;
+    #             """)
+    #             hashed_password = encrypt_password(user.password)
+    #             cur.execute(insert_script, (user.fname, user.sname, user.email, user.phone, hashed_password, ))
+    #             user_id = cur.fetchone()[0]
+    #
+    #             return Patient(id=user_id)
 
 
 @cached(cache={})
 @app.put('/accounts/update/{user_id}', response_model=PatientDetails)
 def update_user(user_id: int, update_data: UpdateUser):
-    with psycopg2.connect(**conn_params) as conn:
-        with conn.cursor() as cur:
-            db_query = sql.SQL("""
-                SELECT id FROM users
-                WHERE id=%s;
-            """)
-            cur.execute(db_query, (user_id, ))
-            row = cur.fetchone()
-
-            if row is None:
-                raise HTTPException(status_code=404, detail="User not found")
-
-            update_fields = []
-            update_values = []
-
-            if update_data.fname:
-                update_fields.append(sql.SQL("fname = %s"))
-                update_values.append(update_data.fname)
-            if update_data.sname:
-                update_fields.append(sql.SQL("sname = %s"))
-                update_values.append(update_data.sname)
-            if update_data.email:
-                update_fields.append(sql.SQL("email = %s"))
-                update_values.append(update_data.email)
-            if update_data.phone:
-                update_fields.append(sql.SQL("phone = %s"))
-                update_values.append(update_data.phone)
-            if update_data.password:
-                update_fields.append(sql.SQL("password = %s"))
-                update_values.append(update_data.password)
-
-            # If no valid fields provided for update
-            if not update_fields:
-                raise HTTPException(status_code=400, detail="No valid fields provided for update")
-
-            # Add user_id as the last value in update_values
-            update_values.append(user_id)
-
-            # Construct and execute the update query
-            update_query = sql.SQL("""
-                UPDATE users
-                SET {}
-                WHERE id = %s
-                RETURNING *;
-            """).format(sql.SQL(', ').join(update_fields))
-
-            cur.execute(update_query, update_values)
-            updated_user = cur.fetchone()
-
-            if updated_user is None:
-                raise HTTPException(status_code=401, detail="Failed to update user")
-
-            return PatientDetails(
-                id=updated_user[0],
-                fname=updated_user[1],
-                sname=updated_user[2],
-                email=updated_user[3],
-                phone=updated_user[4],
-                password=updated_user[5]
-            )
+    return
+    # with psycopg2.connect(**conn_params) as conn:
+    #     with conn.cursor() as cur:
+    #         db_query = sql.SQL("""
+    #             SELECT id FROM users
+    #             WHERE id=%s;
+    #         """)
+    #         cur.execute(db_query, (user_id, ))
+    #         row = cur.fetchone()
+    #
+    #         if row is None:
+    #             raise HTTPException(status_code=404, detail="User not found")
+    #
+    #         update_fields = []
+    #         update_values = []
+    #
+    #         if update_data.fname:
+    #             update_fields.append(sql.SQL("fname = %s"))
+    #             update_values.append(update_data.fname)
+    #         if update_data.sname:
+    #             update_fields.append(sql.SQL("sname = %s"))
+    #             update_values.append(update_data.sname)
+    #         if update_data.email:
+    #             update_fields.append(sql.SQL("email = %s"))
+    #             update_values.append(update_data.email)
+    #         if update_data.phone:
+    #             update_fields.append(sql.SQL("phone = %s"))
+    #             update_values.append(update_data.phone)
+    #         if update_data.password:
+    #             update_fields.append(sql.SQL("password = %s"))
+    #             update_values.append(update_data.password)
+    #
+    #         # If no valid fields provided for update
+    #         if not update_fields:
+    #             raise HTTPException(status_code=400, detail="No valid fields provided for update")
+    #
+    #         # Add user_id as the last value in update_values
+    #         update_values.append(user_id)
+    #
+    #         # Construct and execute the update query
+    #         update_query = sql.SQL("""
+    #             UPDATE users
+    #             SET {}
+    #             WHERE id = %s
+    #             RETURNING *;
+    #         """).format(sql.SQL(', ').join(update_fields))
+    #
+    #         cur.execute(update_query, update_values)
+    #         updated_user = cur.fetchone()
+    #
+    #         if updated_user is None:
+    #             raise HTTPException(status_code=401, detail="Failed to update user")
+    #
+    #         return PatientDetails(
+    #             id=updated_user[0],
+    #             fname=updated_user[1],
+    #             sname=updated_user[2],
+    #             email=updated_user[3],
+    #             phone=updated_user[4],
+    #             password=updated_user[5]
+    #         )
 
 
 @cached(cache={})
 @app.delete('/accounts/delete/{user_id}')
 def delete_user(user_id: int):
-    with psycopg2.connect(**conn_params) as conn:
-        with conn.cursor() as cur:
-            db_query = sql.SQL("""
-                SELECT id FROM users
-                WHERE id=%s;
-            """)
-            cur.execute(db_query, (user_id, ))
-            row = cur.fetchone()
-
-            if row is None:
-                raise HTTPException(status_code=404, detail="User not found")
-            else:
-                delete_query = sql.SQL("""
-                    DELETE FROM users
-                    WHERE id=%s;
-                """)
-                cur.execute(delete_query, (user_id, ))
-                conn.commit()
-
-                return "Successfully Deleted"
+    return
+    # with psycopg2.connect(**conn_params) as conn:
+    #     with conn.cursor() as cur:
+    #         db_query = sql.SQL("""
+    #             SELECT id FROM users
+    #             WHERE id=%s;
+    #         """)
+    #         cur.execute(db_query, (user_id, ))
+    #         row = cur.fetchone()
+    #
+    #         if row is None:
+    #             raise HTTPException(status_code=404, detail="User not found")
+    #         else:
+    #             delete_query = sql.SQL("""
+    #                 DELETE FROM users
+    #                 WHERE id=%s;
+    #             """)
+    #             cur.execute(delete_query, (user_id, ))
+    #             conn.commit()
+    #
+    #             return "Successfully Deleted"
 
 
 @cached(cache={})
 @app.post('/create-medicine')
 def create_medicine(prescription: PrescriptionDetails, user_id: int):
-    with psycopg2.connect(**conn_params) as conn:
-        with conn.cursor() as cur:
-            insert_script = sql.SQL("""
-                INSERT INTO prescriptions (user_id, name, quantity, dosage, mgs)
-                VALUES (%s, %s, %s, %s, %s)
-                RETURNING id;
-            """)
-            cur.execute(insert_script, (user_id, prescription.name, prescription.quantity, prescription.dosage, prescription.mgs, ))
-            prescription_id = cur.fetchone()[0]
-
-            return Prescription(id=prescription_id)
+    return
+    # with psycopg2.connect(**conn_params) as conn:
+    #     with conn.cursor() as cur:
+    #         insert_script = sql.SQL("""
+    #             INSERT INTO prescriptions (user_id, name, quantity, dosage, mgs)
+    #             VALUES (%s, %s, %s, %s, %s)
+    #             RETURNING id;
+    #         """)
+    #         cur.execute(insert_script, (user_id, prescription.name, prescription.quantity, prescription.dosage, prescription.mgs, ))
+    #         prescription_id = cur.fetchone()[0]
+    #
+    #         return Prescription(id=prescription_id)
 
 
 @cached(cache={})
 @app.post('/get-explanation')
 def explain(medicine_name: str):
-    print("Medicine Name: ", medicine_name)
-    try:
-        explanation = get_explanation(medicine_name)
-    except Exception as e:
-        raise HTTPException(status_code=401, detail=f"Error: {e}")
-
-    return explanation
+    return
+    # print("Medicine Name: ", medicine_name)
+    # try:
+    #     explanation = get_explanation(medicine_name)
+    # except Exception as e:
+    #     raise HTTPException(status_code=401, detail=f"Error: {e}")
+    #
+    # return explanation
 
 
 if __name__ == '__main__':
